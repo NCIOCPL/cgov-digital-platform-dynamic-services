@@ -16,6 +16,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CTS", "Modules\CTS\CTS.cspr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CTS.Client", "Modules\CTS.Client\CTS.Client.csproj", "{07DB8185-53DC-4434-9D4A-FFC0EFC9078A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GlossaryLinkHandler", "Modules\GlossaryLinkHandler\GlossaryLinkHandler.csproj", "{FB837661-56D6-439F-A83A-5801B4FE0796}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -38,6 +40,10 @@ Global
 		{07DB8185-53DC-4434-9D4A-FFC0EFC9078A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{07DB8185-53DC-4434-9D4A-FFC0EFC9078A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{07DB8185-53DC-4434-9D4A-FFC0EFC9078A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FB837661-56D6-439F-A83A-5801B4FE0796}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FB837661-56D6-439F-A83A-5801B4FE0796}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FB837661-56D6-439F-A83A-5801B4FE0796}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FB837661-56D6-439F-A83A-5801B4FE0796}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -46,6 +52,7 @@ Global
 		{CD8850E2-7381-413B-9D8B-647DB58627E8} = {1F7BA7C8-1E65-4B32-822B-6707820A7EB2}
 		{BB95DE46-BED5-41F5-B988-D629AC4D4964} = {1F7BA7C8-1E65-4B32-822B-6707820A7EB2}
 		{07DB8185-53DC-4434-9D4A-FFC0EFC9078A} = {1F7BA7C8-1E65-4B32-822B-6707820A7EB2}
+		{FB837661-56D6-439F-A83A-5801B4FE0796} = {1F7BA7C8-1E65-4B32-822B-6707820A7EB2}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9607B89D-8BC3-4D74-8D49-3A1B17FA9966}

@@ -93,6 +93,10 @@
       <Project>{bb95de46-bed5-41f5-b988-d629ac4d4964}</Project>
       <Name>CTS</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Modules\GlossaryLinkHandler\GlossaryLinkHandler.csproj">
+      <Project>{fb837661-56d6-439f-a83a-5801b4fe0796}</Project>
+      <Name>GlossaryLinkHandler</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
