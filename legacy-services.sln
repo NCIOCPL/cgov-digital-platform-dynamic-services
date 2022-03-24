@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.1169
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32210.238
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LegacyCDE.Web", "LegacyCDE.Web\LegacyCDE.Web.csproj", "{07C0454A-C6EF-4510-8B08-232951B4744E}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -17,6 +17,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CTS.Client", "Modules\CTS.Client\CTS.Client.csproj", "{07DB8185-53DC-4434-9D4A-FFC0EFC9078A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GlossaryLinkHandler", "Modules\GlossaryLinkHandler\GlossaryLinkHandler.csproj", "{FB837661-56D6-439F-A83A-5801B4FE0796}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CancerGov.ClinicalTrialsAPI", "Modules\CancerGov.ClinicalTrialsAPI\CancerGov.ClinicalTrialsAPI.csproj", "{12836211-B27C-4706-A398-98AD892D7AFE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -44,6 +46,10 @@ Global
 		{FB837661-56D6-439F-A83A-5801B4FE0796}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FB837661-56D6-439F-A83A-5801B4FE0796}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FB837661-56D6-439F-A83A-5801B4FE0796}.Release|Any CPU.Build.0 = Release|Any CPU
+		{12836211-B27C-4706-A398-98AD892D7AFE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{12836211-B27C-4706-A398-98AD892D7AFE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{12836211-B27C-4706-A398-98AD892D7AFE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{12836211-B27C-4706-A398-98AD892D7AFE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -53,6 +59,7 @@ Global
 		{BB95DE46-BED5-41F5-B988-D629AC4D4964} = {1F7BA7C8-1E65-4B32-822B-6707820A7EB2}
 		{07DB8185-53DC-4434-9D4A-FFC0EFC9078A} = {1F7BA7C8-1E65-4B32-822B-6707820A7EB2}
 		{FB837661-56D6-439F-A83A-5801B4FE0796} = {1F7BA7C8-1E65-4B32-822B-6707820A7EB2}
+		{12836211-B27C-4706-A398-98AD892D7AFE} = {1F7BA7C8-1E65-4B32-822B-6707820A7EB2}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9607B89D-8BC3-4D74-8D49-3A1B17FA9966}
