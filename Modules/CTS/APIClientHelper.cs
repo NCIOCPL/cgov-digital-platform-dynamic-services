@@ -12,30 +12,47 @@ using NCI.ClinicalTrials.Configuration;
 namespace NCI.ClinicalTrials
 {
     /// <summary>
-    /// Helper class get getting an API client instance.
+    /// Factory class to setup and instaniate API client instances.
     /// </summary>
     public static class APIClientHelper
     {
+
+        // A single instance of HttpClient is intended to be shared by all requests within
+        // an application.
+        // See: https://docs.microsoft.com/en-us/dotnet/api/system.net.http.httpclient?view=netframework-4.6.1
+        static readonly HttpClient _httpClient;
+
         /// <summary>
-        /// Gets an instance of a v1 CTAPI client
+        /// Static constructor.
+        /// </summary>
+        static APIClientHelper()
+        {
+            Uri baseUrl = new Uri(ClinicalTrialSearchAPISection.Instance.BaseUrl);
+
+            // The ClinicalTrials API always returns using gzip encoding, regardless of whether the client sends
+            // an Accept header. Even if this weren't the case, we'd likely want to save some time and bandwidth.
+            var handler = new HttpClientHandler
+            {
+                AutomaticDecompression = System.Net.DecompressionMethods.GZip | System.Net.DecompressionMethods.Deflate
+            };
+
+            _httpClient = new HttpClient(handler);
+            _httpClient.BaseAddress = baseUrl;
+
+            // Formally add the accept headers. NOTE: Brotli compression is not supported in the 4.x framework. That requires .Net Core 3.0 and later.
+            _httpClient.DefaultRequestHeaders.AcceptEncoding.Add(new System.Net.Http.Headers.StringWithQualityHeaderValue("gzip"));
+            _httpClient.DefaultRequestHeaders.AcceptEncoding.Add(new System.Net.Http.Headers.StringWithQualityHeaderValue("deflate"));
+        }
+
+
+        /// <summary>
+        /// Factory method for creating an instance of ClinicalTrialsAPIClient.
         /// </summary>
         /// <returns></returns>
-        public static ClinicalTrialsAPIClient GetV1ClientInstance()
+        public static ClinicalTrialsAPIClient GetClientInstance()
         {
-
-            string baseApiPath = BasicClinicalTrialSearchAPISection.GetAPIUrl();
-            string versionPath = ConfigurationManager.AppSettings["ClinicalTrialsAPIBasepath"];
-
-            if (string.IsNullOrWhiteSpace(versionPath))
-                throw new ConfigurationErrorsException("error: ClinicalTrialsAPIBasepath cannot be null or empty");
-
-
-
-            HttpClient client = new HttpClient();
-            //NOTE: the base URL MUST have a trailing slash
-            client.BaseAddress = new Uri(String.Format("{0}/{1}/", baseApiPath, versionPath));
-
-            return new ClinicalTrialsAPIClient(client);
+            ClinicalTrialSearchAPISection config = ClinicalTrialSearchAPISection.Instance;
+            return new ClinicalTrialsAPIClient(_httpClient, config);
         }   
     }
 }
