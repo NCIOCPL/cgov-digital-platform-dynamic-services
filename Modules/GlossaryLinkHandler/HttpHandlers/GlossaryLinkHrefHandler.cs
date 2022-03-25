@@ -191,10 +191,8 @@ namespace GlossaryLinkHandler.HttpHandlers
                     return null;
 
                 case "notset":
-                    return null;
-
                 default:
-                    return null;
+                    break;
             }
 
             return null;
