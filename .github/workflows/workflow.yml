@@ -47,20 +47,23 @@ jobs:
     #   run: msbuild test\RunUnitTests.targets /p:Configuration=Release
 
     - name: Publish
-      run: msbuild legacy-services.sln /p:TreatWarningsAsErrors=true /p:Configuration=Release /p:DeployOnBuild=true /p:PublishProfile=FolderProfile
+      run: |
+        msbuild legacy-services.sln /p:TreatWarningsAsErrors=true /p:Configuration=Release /p:DeployOnBuild=true /p:PublishProfile=FolderProfile
+        copy tools\deploy-site.ps1 publish\*.*
+      shell: cmd
 
     - name: Record metadata
       env:
         BUILD_INFO: ${{ toJson( needs.extract_build_info.outputs ) }}
       run: |
         echo "$BUILD_INFO"
-        echo "$BUILD_INFO" > $GITHUB_WORKSPACE/publish/build-info.json
+        echo "$BUILD_INFO" > $GITHUB_WORKSPACE/publish/dynamic-services/build-info.json
       shell: bash      
 
     - name: Upload Artifact
       uses: actions/upload-artifact@v1.0.0
       with:
-        name: legacy-services
+        name: dynamic-services
         path: .\publish
 
   extract_build_info:
