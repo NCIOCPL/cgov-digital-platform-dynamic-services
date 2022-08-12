@@ -3,8 +3,11 @@ using System.Configuration;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Web;
+
 using Common.Logging;
+using Newtonsoft.Json.Linq;
 
 using CancerGov.ClinicalTrialsAPI;
 using NCI.ClinicalTrials.Configuration;
@@ -48,16 +51,41 @@ namespace NCI.ClinicalTrials
         /// </summary>
         public void Init(HttpApplication context)
         {
-            context.BeginRequest += new EventHandler(OnBeginRequest);
+            // Handle asynchronously.
+            context.AddOnBeginRequestAsync(OnBeginAsync, OnEnd);
         }
 
         /// <summary>
         /// Main chain of events in the module execution.
         /// </summary>
-        void OnBeginRequest(object sender, EventArgs e)
+        private IAsyncResult OnBeginAsync(object sender, EventArgs e, AsyncCallback cb, object extraData)
         {
+            // This, plus the AddOnBeginRequestAsync in Init, is how we translate from a synchronous
+            // IHttpModule to the world of async/await.  For more detail, see
+            // https://brockallen.com/2013/07/27/implementing-async-http-modules-in-asp-net-using-tpls-task-api/
+            var tcs = new TaskCompletionSource<object>(extraData);
             HttpContext context = ((HttpApplication)sender).Context;
+            DoCheckForRedirect(context).ContinueWith(t =>
+            {
+                if (t.IsFaulted)
+                {
+                    tcs.SetException(t.Exception.InnerException);
+                }
+                else
+                {
+                    tcs.SetResult(null);
+                }
+                if (cb != null) cb(tcs.Task);
+            });
+            return tcs.Task;
+        }
 
+        /// <summary>
+        /// Check whether the request should be redirected.
+        /// </summary>
+        /// <param name="context">Request context</param>
+        async Task DoCheckForRedirect(HttpContext context)
+        {
             // Get absolute path of the request URL as pretty URL
             String url = context.Server.UrlDecode(context.Request.Url.AbsolutePath);
 
@@ -71,16 +99,23 @@ namespace NCI.ClinicalTrials
             if (!string.IsNullOrWhiteSpace(this.SearchResultsPrettyUrl))
             {
                 //If this is not an old view url then handle the existing pretty url redirect logic.
-                RedirectForTrialPrettyURL(context);
+                await RedirectForTrialPrettyURL(context);
             }
         }
 
+        /// <summary>
+        /// This method does nothing. It is a required bookend for the asychronous Begin/End.
+        /// </summary>
+        /// <param name="ar">Result of the asynchronous call.</param>
+        private void OnEnd(IAsyncResult ar)
+        {
+        }
 
         /// <summary>
         /// Handles redirections for &lt;hostname&gt;/clinicaltrials/&lt;NCTID&gt pretty urls.
         /// </summary>
         /// <param name="context"></param>
-        private void RedirectForTrialPrettyURL(HttpContext context)
+        async private Task RedirectForTrialPrettyURL(HttpContext context)
         {
             // The URL should match this pattern: '<hostname>/clinicaltrials/<NCTID>. If it does, proceed with retrieving the ID
             // We're only concerned about the NCT ID at this point - not NCI, CDR, or any other trial IDs
@@ -99,7 +134,7 @@ namespace NCI.ClinicalTrials
                     try
                     {
                         // If the ID matches a trial in the API, go to the view page on www.cancer.gov
-                        if (!string.IsNullOrWhiteSpace(cleanId) && IsValidTrial(cleanId))
+                        if (!string.IsNullOrWhiteSpace(cleanId) && await IsValidTrial(cleanId))
                         {
                             //In addition to the id param, add the "r" redirect flag
                             string ctViewUrl = string.Format(SearchResultsPrettyUrl + "?id={0}&r=1", cleanId.ToUpper());
@@ -166,13 +201,13 @@ namespace NCI.ClinicalTrials
         /// </summary>
         /// <param name="idString">NCT ID</param>
         /// <returns>True if trial is found in API.</returns>
-        private bool IsValidTrial(string idString)
+        async private Task<bool> IsValidTrial(string idString)
         {
             // If the ID is a valid NCTID, go to web service and see if trial exists
             try
             {                
-                ClinicalTrialsAPIClient client = APIClientHelper.GetV1ClientInstance();
-                ClinicalTrial trial = client.Get(idString);
+                IClinicalTrialsAPIClient client = APIClientHelper.GetClientInstance();
+                JObject trial = await client.GetOneTrial(idString);
                 if (trial != null)
                 {
                     return true;

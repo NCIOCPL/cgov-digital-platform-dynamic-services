@@ -9,9 +9,10 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>CancerGov.ClinicalTrials.Basic.v2</RootNamespace>
     <AssemblyName>NCI.CTS</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -37,6 +38,9 @@
     <Reference Include="Common.Logging.Core, Version=3.4.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Common.Logging.Core.3.4.1\lib\net40\Common.Logging.Core.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
@@ -59,13 +63,13 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\CancerGov.ClinicalTrialsAPI\CancerGov.ClinicalTrialsAPI.csproj">
+      <Project>{12836211-b27c-4706-a398-98ad892d7afe}</Project>
+      <Name>CancerGov.ClinicalTrialsAPI</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Common\Common.csproj">
       <Project>{cd8850e2-7381-413b-9d8b-647db58627e8}</Project>
       <Name>Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\CTS.Client\CTS.Client.csproj">
-      <Project>{07db8185-53dc-4434-9d4a-ffc0efc9078a}</Project>
-      <Name>CTS.Client</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
