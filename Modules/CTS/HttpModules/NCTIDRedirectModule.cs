@@ -35,6 +35,17 @@ namespace NCI.ClinicalTrials
             }
         }
 
+        /// <summary>
+        /// Get the format string for the CT.Gov redirection URL.
+        /// </summary>
+        private string CTGovRedirectionUrlFormat
+        {
+            get
+            {
+                return ConfigurationManager.AppSettings["CTGov_RedirectionURLFormat"];
+            }
+        }
+
 
 
         #region IHttpModule Members
@@ -142,11 +153,11 @@ namespace NCI.ClinicalTrials
                         }
 
                         // If there is no matching trial, but it's a valid NCT ID, redirect to clinicaltrials.gov
-                        // CTGov URL format is "https://clinicaltrials.gov/show/<NCT_ID>"
+                        // CTGov URL format is "https://clinicaltrials.gov/study/<NCT_ID>"
                         else if (IsNctID(cleanId))
                         {
                             log.DebugFormat("NCT ID {0} not found in API.", cleanId);
-                            String nlmUrl = String.Format("https://clinicaltrials.gov/show/{0}", cleanId.ToUpper());
+                            String nlmUrl = String.Format(CTGovRedirectionUrlFormat, cleanId.ToUpper());
                             log.DebugFormat("Redirecting to {0}", nlmUrl);
                             context.Response.Redirect(nlmUrl, true);
                         }
