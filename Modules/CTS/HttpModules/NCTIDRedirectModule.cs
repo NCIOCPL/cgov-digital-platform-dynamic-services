@@ -21,17 +21,37 @@ namespace NCI.ClinicalTrials
     /// </summary>
     public class NCTIDRedirectModule : IHttpModule
     {
+        const string DEFAULT_CTGOV_URL_FORMAT = "https://clinicaltrials.gov/study/{0}";
+        const string DEFAULT_RESULTS_PAGE_URL_FORMAT = "https://www.cancer.gov/about-cancer/treatment/clinical-trials/search/v?id={0}&r=1";
+
         /// <summary>Set logging for this class.</summary>
         static ILog log = LogManager.GetLogger(typeof(NCTIDRedirectModule));
 
         /// <summary>
         /// Get the the path for the Clinical Trials View page from Web.config
         /// </summary>
-        private string SearchResultsPrettyUrl
+        private string SearchResultsPrettyUrlFormat
         {
             get
             {
-                return ConfigurationManager.AppSettings["CTS_DetailedViewPagePrettyUrl"];
+                string urlString = ConfigurationManager.AppSettings["CTS_DetailedViewPagePrettyUrlFormat"];
+                if (String.IsNullOrWhiteSpace(urlString))
+                    urlString = DEFAULT_RESULTS_PAGE_URL_FORMAT;
+                return urlString;
+            }
+        }
+
+        /// <summary>
+        /// Get the format string for the CT.Gov redirection URL.
+        /// </summary>
+        private string CTGovRedirectionUrlFormat
+        {
+            get
+            {
+                string formatString = ConfigurationManager.AppSettings["CTGov_RedirectionURLFormat"];
+                if (String.IsNullOrWhiteSpace(formatString))
+                    formatString = DEFAULT_CTGOV_URL_FORMAT;
+                return formatString;
             }
         }
 
@@ -96,7 +116,7 @@ namespace NCI.ClinicalTrials
             }
 
             //Check if we have a view page pretty URL before redirecting.  Otherwise it should be a 404.
-            if (!string.IsNullOrWhiteSpace(this.SearchResultsPrettyUrl))
+            if (!string.IsNullOrWhiteSpace(this.SearchResultsPrettyUrlFormat))
             {
                 //If this is not an old view url then handle the existing pretty url redirect logic.
                 await RedirectForTrialPrettyURL(context);
@@ -137,16 +157,16 @@ namespace NCI.ClinicalTrials
                         if (!string.IsNullOrWhiteSpace(cleanId) && await IsValidTrial(cleanId))
                         {
                             //In addition to the id param, add the "r" redirect flag
-                            string ctViewUrl = string.Format(SearchResultsPrettyUrl + "?id={0}&r=1", cleanId.ToUpper());
+                            string ctViewUrl = string.Format(SearchResultsPrettyUrlFormat, cleanId.ToUpper());
                             context.Response.Redirect(ctViewUrl, true);
                         }
 
                         // If there is no matching trial, but it's a valid NCT ID, redirect to clinicaltrials.gov
-                        // CTGov URL format is "https://clinicaltrials.gov/show/<NCT_ID>"
+                        // CTGov URL format is "https://clinicaltrials.gov/study/<NCT_ID>"
                         else if (IsNctID(cleanId))
                         {
                             log.DebugFormat("NCT ID {0} not found in API.", cleanId);
-                            String nlmUrl = String.Format("https://clinicaltrials.gov/show/{0}", cleanId.ToUpper());
+                            String nlmUrl = String.Format(CTGovRedirectionUrlFormat, cleanId.ToUpper());
                             log.DebugFormat("Redirecting to {0}", nlmUrl);
                             context.Response.Redirect(nlmUrl, true);
                         }
