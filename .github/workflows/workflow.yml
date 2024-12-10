@@ -55,7 +55,7 @@ jobs:
         output-name: ${{ github.workspace }}/publish/dynamic-services/build-info.json
 
     - name: Upload Artifact
-      uses: actions/upload-artifact@v1.0.0
+      uses: actions/upload-artifact@v4
       with:
         name: dynamic-services
         path: .\publish
