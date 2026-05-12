@@ -18,7 +18,7 @@ jobs:
   test_build_release:
 
     name: Test, Build, and Publish
-    runs-on: windows-latest
+    runs-on: windows-2025-vs2026
     permissions:
       contents: read
 
