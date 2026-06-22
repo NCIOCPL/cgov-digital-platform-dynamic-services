@@ -1,0 +1,7 @@
+{
+    "testFiles": "**/*.feature",
+    "video": false,
+    "baseUrl": "https://www-blue-dev.cancer.gov",
+    "viewportWidth": 1025,
+    "viewportHeight": 600
+  }
