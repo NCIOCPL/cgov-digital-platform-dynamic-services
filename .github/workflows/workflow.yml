@@ -52,7 +52,7 @@ jobs:
       shell: cmd
 
     - name: Record metadata
-      uses: nciocpl/build-info-action@v1.0.0
+      uses: nciocpl/build-info-action@63ae491415ce659c19d776368211e6f1dcaa1e1f
       with:
         output-name: ${{ github.workspace }}/publish/dynamic-services/build-info.json
 
